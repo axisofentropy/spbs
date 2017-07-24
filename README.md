@@ -7,7 +7,7 @@ This repository implements a simple solution to the [Nurse Scheduling Problem](h
 Administrators must assign two or more employees to a (usually) equal number of schedules.  The only criteria are employee preferences.  The most desirable roster assigns all employees their most preferred schedule.
 
 ## Dependencies
-Python 2.6 or maybe 2.7?
+Python 2.7
 
 ## Usage
 Initially, this implementation works best with Google Sheets and Forms.  We suggest creating a Form asking employees to rank their preferences for all available schedules in order from 1 (first choice) to N (last choice) where N is the number of available schedules.  This should result in a spreadsheet like this:

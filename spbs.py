@@ -2,6 +2,18 @@ from random import shuffle, choice
 from csv import DictReader, DictWriter
 from itertools import product, permutations
 from math import factorial
+from argparse import ArgumentParser
+
+argparser = ArgumentParser(
+ description='Simple Preferential Bidding System',
+ epilog='https://github.com/axisofentropy/spbs/'
+)
+
+argparser.add_argument("bidcsv",
+ help='Filename of input bids in CSV format.'
+)
+
+args = argparser.parse_args()
 
 names = [
 ]
@@ -11,7 +23,7 @@ shifts = [
 
 bids = {}
 
-with open('input.csv') as csvfile:
+with open(args.bidcsv) as csvfile:
  csvreader = DictReader(csvfile)
 
  shifts = csvreader.fieldnames[1:]
