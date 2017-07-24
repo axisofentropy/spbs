@@ -1,6 +1,6 @@
 from random import shuffle, choice
 from csv import DictReader, DictWriter
-from itertools import product, combinations
+from itertools import product, permutations
 
 names = [
 ]
@@ -24,8 +24,8 @@ with open('input.csv') as csvfile:
   bids[name] = row
   print name, 'bids for', bids[name]
 
-names = names[1:7]
-#shifts = shifts[1:5]
+names = names[1:9]
+shifts = shifts[1:9]
 print 'These applicants will bid for shifts:', ', '.join(names)
 print ''
 
@@ -59,19 +59,21 @@ best_score = -100
 best_roster = {}
 
 iii = 0
-for roster in combinations(product(shifts, names), len(names)):
+for roster in product(permutations(shifts, len(names)), permutations(names, len(names))):
  iii = iii + 1
  if not iii % 1000000:
   print "generated", iii
+ roster = zip(roster[0],roster[1])
+ #print roster
  roster = dict(roster)
- if len(set(roster)) == len(names) and len(set(roster.values())) == len(names):
-  this_score = score(roster)
-  #rosters.append(roster)
-  #scores.append(score(roster))
-  if this_score >= best_score:
-   best_score = this_score
-   print "found", this_score, roster
-   best_roster = roster
+ #print roster
+ this_score = score(roster)
+ #rosters.append(roster)
+ #scores.append(score(roster))
+ if this_score > best_score:
+  best_score = this_score
+  print "found", this_score, roster
+  best_roster = roster
 
 """
 for roster in combinations(pairings, len(names)):
