@@ -1,19 +1,6 @@
 from random import shuffle, choice
-from csv import DictReader, DictWriter
 from itertools import product, permutations
 from math import factorial
-from argparse import ArgumentParser
-
-argparser = ArgumentParser(
- description='Simple Preferential Bidding System',
- epilog='https://github.com/axisofentropy/spbs/'
-)
-
-argparser.add_argument("bidcsv",
- help='Filename of input bids in CSV format.'
-)
-
-args = argparser.parse_args()
 
 names = [
 ]
@@ -21,35 +8,22 @@ names = [
 shifts = [
 ]
 
-bids = {}
+def importcsvbids(csvfilename, bids):
+ from csv import DictReader
+ with open(csvfilename) as csvfile:
+  csvreader = DictReader(csvfile)
+  fieldnames = list(csvreader.fieldnames) # copy
 
-with open(args.bidcsv) as csvfile:
- csvreader = DictReader(csvfile)
+  for row in csvreader:
+   # Remove first field leaving just the bid numbers.
+   name = row[csvreader.fieldnames[0]]
+   row.pop(csvreader.fieldnames[0])
 
- shifts = csvreader.fieldnames[1:]
- print 'These shifts are available:', shifts
- print ''
+   # Add this person's bids.
+   bids[name] = row
+   print name, 'bids for', bids[name]
 
- for row in csvreader:
-  name = row[csvreader.fieldnames[0]]
-  names.append(name)
-  row.pop(csvreader.fieldnames[0])
-  bids[name] = row
-  print name, 'bids for', bids[name]
-
-#names = names[1:7]
-#shifts = shifts[1:8]
-print 'These applicants will bid for shifts:', ', '.join(names)
-print ''
-
-
-# for later output.
-output_fieldnames = ['name',] + list(shifts)
-#output_names = list(names)
-
-roster = {
-  shift : None for shift in shifts
-}
+  return fieldnames
 
 def score(roster):
  score_total = 0
@@ -66,71 +40,71 @@ def assign (name, shift, bid_index):
  shifts.remove(shift)
  print "Assigned", name, 'to shift', shift, "in round", bid_index + 1
 
-rosters = [] # All possible rosters
-scores  = [] # Positional scores
-best_score = -100
-best_roster = {}
+def exhaustive_search(bids, shifts):
+ best_score = -100
+ best_roster = {}
+ roster_length = len(shifts)
+ if roster_length is not len(bids.keys()):
+  raise Exception('not square bids.')
 
-iii = 0
-search_len = factorial(len(names)) * factorial(len(shifts))
-print "Search through", search_len, "possibilities."
+ search_len = factorial(roster_length) * factorial(roster_length)
+ print "Search through", search_len, "possibilities."
 
-for roster in product(permutations(shifts, len(names)), permutations(names, len(names))):
- iii = iii + 1
- #if not iii % 1000000:
-  #print "generated", iii
- percent = 100 * float(iii) / float(search_len)
- if not percent % 1:
-  print percent, "%  generated", iii, "of", search_len
- roster = zip(roster[0],roster[1])
- #print roster
- roster = dict(roster)
- #print roster
- this_score = score(roster)
- #rosters.append(roster)
- #scores.append(score(roster))
- if this_score > best_score:
-  best_score = this_score
-  print "found", this_score, roster
-  best_roster = roster
+ iii = 0
+ for roster in product(permutations(shifts, roster_length), permutations(bids.keys(), roster_length)):
+  iii = iii + 1
+  percent = 100 * float(iii) / float(search_len)
+  if not percent % 1:
+   print percent, "%  generated", iii, "of", search_len
 
-"""
-for roster in combinations(pairings, len(names)):
- candidate = dict(roster)
- if len(candidate.keys()) == len(names):
-  print candidate
-  rosters.append(candidate)
-"""
+  roster = zip(roster[0],roster[1])
+  roster = dict(roster)
+  this_score = score(roster)
+  if this_score > best_score:
+   best_score = this_score
+   print "found", this_score, roster
+   best_roster = roster
 
-print len(rosters)
+ return best_roster
 
-"""
-for i in range(len(shifts)):
- print ''
- print "ROUND", i+1
- for shift in list(shifts):
-  bidders = filter(lambda name : bids[name][shift] == str(i + 1), names)
-  if bidders:
-   print ' and '.join(bidders), "bid on shift", shift
-   # randomly assign one member of the list of bidders.
-   assign(choice(bidders), shift, i)
-  else:
-   print "no bids this round for shift", shift
-"""
+def exportcsvbids(csvfilename='/tmp/deleteme.csv', bids={}, fieldnames=[]):
+ from csv import DictWriter
+ with open(csvfilename, 'w') as csvfile:
+  csvwriter = DictWriter(csvfile, fieldnames=fieldnames)
+  csvwriter.writeheader()
+  for name in bids.keys():
+   output_row = {fieldnames[0]: name}
+   output_row.update(bids[name])
+   csvwriter.writerow(output_row)
+   #csvwriter.writerow({shift: bid for shift, bid in zip(output_fieldnames,[name,] + bids[name])})
 
-print ''
-print 'ROSTER SCORE'
-print "Roster score:", score(best_roster)
+# Main loop if called via command-line
+if __name__ == "__main__":
+ from argparse import ArgumentParser
 
-print 'OUTPUT'
-print best_roster
+ argparser = ArgumentParser(
+  description='Simple Preferential Bidding System',
+  epilog='https://github.com/axisofentropy/spbs/'
+ )
 
-#print fieldnames
-with open('/tmp/deleteme.csv', 'w') as csvfile:
- csvwriter = DictWriter(csvfile, fieldnames=csvreader.fieldnames)
- csvwriter.writeheader()
- for name in bids.keys():
-  output_row = {csvreader.fieldnames[0]: name}
-  output_row.update(bids[name])
-  csvwriter.writerow(output_row)
-  #csvwriter.writerow({shift: bid for shift, bid in zip(output_fieldnames,[name,] + bids[name])})
+ argparser.add_argument("bidcsv",
+  help='Filename of input bids in CSV format.'
+ )
+
+ args = argparser.parse_args()
+
+ bids = {}
+
+ fieldnames = importcsvbids(args.bidcsv, bids)
+
+ print 'These applicants will bid for shifts:', ', '.join(bids.keys())
+
+ shifts = bids[bids.keys()[0]] # risky
+
+ best_roster = exhaustive_search(bids, shifts)
+
+ print "BEST ROSTER"
+ print best_roster
+ print "SCORE", score(best_roster)
+
+ exportcsvbids(bids=bids, fieldnames=fieldnames)
