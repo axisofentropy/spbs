@@ -1,29 +1,31 @@
 from random import shuffle, choice
-from csv import DictWriter
+from csv import DictReader, DictWriter
 
 names = [
- 'Adam',
- 'Bob',
- 'Charlie',
- 'Dave',
- 'Einstein',
- 'George',
- 'Herbert',
- 'Ingrid',
- 'Jill',
- 'Kate',
- 'Louis',
- 'Mallory',
- 'Nancy',
 ]
+
+shifts = [
+]
+
+bids = {}
+
+with open('input.csv') as csvfile:
+ csvreader = DictReader(csvfile)
+
+ shifts = csvreader.fieldnames[1:]
+ print 'These shifts are available:', shifts
+ print ''
+
+ for row in csvreader:
+  name = row[csvreader.fieldnames[0]]
+  names.append(name)
+  row.pop(csvreader.fieldnames[0])
+  bids[name] = row
+  print name, 'bids for', bids[name]
+
 print 'These applicants will bid for shifts:', ', '.join(names)
 print ''
 
-shifts = [
- x+1 for x in range(len(names))
-]
-print 'These shifts are available:', shifts
-print ''
 
 # for later output.
 output_fieldnames = ['name',] + list(shifts)
@@ -33,15 +35,9 @@ roster = {
   shift : None for shift in shifts
 }
 
-bids = {}
-for name in names:
- bids[name] = list(shifts)
- shuffle(bids[name])
- print name, 'bids for', bids[name]
-
 def assign (name, shift, bid_index):
  roster[shift] = name
- #bids[name][bid_index] = 10000 + shift
+ bids[name][shift] = 10000 + bid_index + 1
  names.remove(name)
  shifts.remove(shift)
  print "Assigned", name, 'to shift', shift, "in round", bid_index + 1
@@ -50,7 +46,7 @@ for i in range(len(shifts)):
  print ''
  print "ROUND", i+1
  for shift in list(shifts):
-  bidders = filter(lambda name : bids[name][shift-1] == i + 1, names)
+  bidders = filter(lambda name : bids[name][shift] == str(i + 1), names)
   if bidders:
    print ' and '.join(bidders), "bid on shift", shift
    # randomly assign one member of the list of bidders.
@@ -69,7 +65,10 @@ print bids
 print 'OUTPUT'
 #print fieldnames
 with open('/tmp/deleteme.csv', 'w') as csvfile:
- csvwriter = DictWriter(csvfile, fieldnames=output_fieldnames)
+ csvwriter = DictWriter(csvfile, fieldnames=csvreader.fieldnames)
  csvwriter.writeheader()
  for name in bids.keys():
-  csvwriter.writerow({shift: bid for shift, bid in zip(output_fieldnames,[name,] + bids[name])})
+  output_row = {csvreader.fieldnames[0]: name}
+  output_row.update(bids[name])
+  csvwriter.writerow(output_row)
+  #csvwriter.writerow({shift: bid for shift, bid in zip(output_fieldnames,[name,] + bids[name])})
