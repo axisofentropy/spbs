@@ -37,7 +37,7 @@ roster = {
 
 def assign (name, shift, bid_index):
  roster[shift] = name
- bids[name][shift] = 10000 + bid_index + 1
+ #bids[name][shift] = 10000 + bid_index + 1
  names.remove(name)
  shifts.remove(shift)
  print "Assigned", name, 'to shift', shift, "in round", bid_index + 1
@@ -55,12 +55,14 @@ for i in range(len(shifts)):
    print "no bids this round for shift", shift
 
 print ''
-print 'ROSTER'
+print 'ROSTER SCORE'
+score_total = 0
 for shift in roster.keys():
- print "Shift", shift, '-', roster[shift]
+ score = int(bids[roster[shift]][shift]) - 1
+ print "Score", score, "for Shift", shift, '-', roster[shift]
+ score_total = score_total - score
 
-print 'SCORE'
-print bids
+print "Roster score:", score_total
 
 print 'OUTPUT'
 #print fieldnames
