@@ -1,0 +1,7 @@
+Email Address,Shift 1 (off Tu/W/Th),Shift 2 (off Su/M),Shift 3 (off Th/F),Shift 4 (off Tu/W),Shift 5 (off Tu/W),Shift 6 (off W/Th)
+alice@example.com,1,2,3,4,5,6
+bob@example.com,1,3,2,5,6,4
+charlie@example.com,1,3,2,6,4,5
+david@example.com,6,1,2,4,5,3
+eliza@example.com,1,2,3,4,5,6
+francis@example.com,1,5,2,4,6,3

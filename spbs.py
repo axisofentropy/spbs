@@ -25,8 +25,8 @@ with open('input.csv') as csvfile:
   bids[name] = row
   print name, 'bids for', bids[name]
 
-names = names[1:7]
-shifts = shifts[1:8]
+#names = names[1:7]
+#shifts = shifts[1:8]
 print 'These applicants will bid for shifts:', ', '.join(names)
 print ''
 

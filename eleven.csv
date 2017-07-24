@@ -1,0 +1,12 @@
+Email Address,Shift 1 (off Sa/Su),Shift 2 (off W/Th),Shift 3 (off Tu/W/Th),Shift 4 (off Sa/Su),Shift 5 (off Sa/Su),Shift 6 (off Sa/Su),Shift 7 (off F/Sa),Shift 8(off Tu/W),Shift 9 (off F/Sa),Shift 10 (off Sa/Su),Shift 11 (off Tu/W/Th)
+Alice@example.com,9,11,10,2,1,5,3,6,4,7,8
+Bob@example.com,4,5,2,1,6,10,7,11,8,9,3
+Charlie@example.com,11,10,9,1,2,3,4,5,6,7,8
+David@example.com,4,11,9,2,1,7,5,10,6,3,8
+Eliza@example.com,1,2,3,4,5,6,7,8,9,10,11
+Francis@example.com,10,11,9,8,5,1,3,4,2,6,7
+George@example.com,11,10,9,2,3,1,4,6,5,7,8
+Harriet@example.com,6,9,10,1,2,7,3,8,4,5,11
+Isaac@example.com,6,7,9,1,2,4,3,8,5,11,10
+Justin@example.com,8,11,9,1,2,10,3,7,4,5,6
+Kate@example.com,11,10,9,8,7,6,5,4,3,1,2
