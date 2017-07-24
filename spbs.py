@@ -50,7 +50,7 @@ for i in range(len(shifts)):
  print ''
  print "ROUND", i+1
  for shift in list(shifts):
-  bidders = filter(lambda name : bids[name][i] == shift, names)
+  bidders = filter(lambda name : bids[name][shift-1] == i + 1, names)
   if bidders:
    print ' and '.join(bidders), "bid on shift", shift
    # randomly assign one member of the list of bidders.
