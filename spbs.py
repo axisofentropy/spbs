@@ -1,4 +1,5 @@
 from random import shuffle, choice
+from csv import DictWriter
 
 names = [
  'Adam',
@@ -24,6 +25,10 @@ shifts = [
 print 'These shifts are available:', shifts
 print ''
 
+# for later output.
+output_fieldnames = ['name',] + list(shifts)
+#output_names = list(names)
+
 roster = {
   shift : None for shift in shifts
 }
@@ -34,11 +39,12 @@ for name in names:
  shuffle(bids[name])
  print name, 'bids for', bids[name]
 
-def assign (name, shift):
+def assign (name, shift, bid_index):
  roster[shift] = name
+ #bids[name][bid_index] = 10000 + shift
  names.remove(name)
  shifts.remove(shift)
- print "Assigned", name, 'to shift', shift
+ print "Assigned", name, 'to shift', shift, "in round", bid_index + 1
 
 for i in range(len(shifts)):
  print ''
@@ -47,7 +53,8 @@ for i in range(len(shifts)):
   bidders = filter(lambda name : bids[name][i] == shift, names)
   if bidders:
    print ' and '.join(bidders), "bid on shift", shift
-   assign(choice(bidders), shift)
+   # randomly assign one member of the list of bidders.
+   assign(choice(bidders), shift, i)
   else:
    print "no bids this round for shift", shift
 
@@ -55,3 +62,14 @@ print ''
 print 'ROSTER'
 for shift in roster.keys():
  print "Shift", shift, '-', roster[shift]
+
+print 'SCORE'
+print bids
+
+print 'OUTPUT'
+#print fieldnames
+with open('/tmp/deleteme.csv', 'w') as csvfile:
+ csvwriter = DictWriter(csvfile, fieldnames=output_fieldnames)
+ csvwriter.writeheader()
+ for name in bids.keys():
+  csvwriter.writerow({shift: bid for shift, bid in zip(output_fieldnames,[name,] + bids[name])})
