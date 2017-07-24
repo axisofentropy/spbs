@@ -1,6 +1,7 @@
 from random import shuffle, choice
 from csv import DictReader, DictWriter
 from itertools import product, permutations
+from math import factorial
 
 names = [
 ]
@@ -24,8 +25,8 @@ with open('input.csv') as csvfile:
   bids[name] = row
   print name, 'bids for', bids[name]
 
-names = names[1:9]
-shifts = shifts[1:9]
+names = names[1:7]
+shifts = shifts[1:8]
 print 'These applicants will bid for shifts:', ', '.join(names)
 print ''
 
@@ -59,10 +60,16 @@ best_score = -100
 best_roster = {}
 
 iii = 0
+search_len = factorial(len(names)) * factorial(len(shifts))
+print "Search through", search_len, "possibilities."
+
 for roster in product(permutations(shifts, len(names)), permutations(names, len(names))):
  iii = iii + 1
- if not iii % 1000000:
-  print "generated", iii
+ #if not iii % 1000000:
+  #print "generated", iii
+ percent = 100 * float(iii) / float(search_len)
+ if not percent % 1:
+  print percent, "%  generated", iii, "of", search_len
  roster = zip(roster[0],roster[1])
  #print roster
  roster = dict(roster)
