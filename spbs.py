@@ -4,7 +4,7 @@ from random import shuffle, choice
 from itertools import product, permutations
 from math import factorial
 
-from rostersearch import hill_climbing_roster_search
+from rostersearch import mountain_range_search
 
 names = [
 ]
@@ -104,9 +104,10 @@ if __name__ == "__main__":
 
  shifts = bids[list(bids.keys())[0]] # risky
 
- best_roster = hill_climbing_roster_search(bids, shifts)
+ #best_roster = hill_climbing_roster_search(bids, shifts)
+ best_roster = mountain_range_search(bids, shifts)
 
- print(best_roster)
+ print("BEST", best_roster)
  print("SCORE", score(best_roster))
 
  exportcsvbids(bids=bids, fieldnames=fieldnames)

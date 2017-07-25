@@ -9,13 +9,14 @@ class Roster(dict):
   return self.values()
 
 class RosterProblem(Problem):
- def __init__(self, initial, bids, goal=None):
+ def __init__(self, initial, bids, badgoals=[], goal=None):
   """The constructor specifies the initial state, and possibly a goal
   state, if there is a unique goal.  Your subclass's constructor can add
   other arguments."""
   self.initial = initial
   self.goal = goal
   self.bids = bids
+  self.badgoals = badgoals
   self.names = bids.keys()
   self.shifts = bids[list(bids.keys())[0]] #risky
 
@@ -26,7 +27,7 @@ class RosterProblem(Problem):
   iterator, rather than building them all at once."""
   available_names = list(filter(lambda x: x not in state.names(), self.names))
   available_shifts = list(filter(lambda x: x not in state.shifts(), self.shifts))
-  print(list(product(available_shifts, available_names)))
+  #print(list(product(available_shifts, available_names)))
   return product(available_shifts, available_names)
 
  def result(self, state, action):
@@ -36,10 +37,12 @@ class RosterProblem(Problem):
   output = Roster()
   output.update(state)
   output[action[0]] = action[1]
-  print(output)
+  #print(output)
   return output
 
  def goal_test(self, state):
+  if state in badgoals:
+   return False
   return len(state.names) == len(self.names)
 
  # path_cost(self, c, state1, action, state2)
@@ -52,9 +55,29 @@ class RosterProblem(Problem):
    score = int(self.bids[state[shift]][shift]) - 1
    # print "Score", score, "for Shift", shift, '-', roster[shift]
    score_total = score_total - score + 1000
-  print(score_total, state)
+  #print("SCORE", score_total, state)
   return score_total
 
 def hill_climbing_roster_search(bids, shifts):
  problem = RosterProblem(Roster(), bids)
  return hill_climbing(problem) 
+
+def mountain_range_search(bids, shifts):
+ # List of previously discovered goal states.
+ attempts = 10000
+ previous_goals = []
+ while len(previous_goals) < attempts:
+  problem = RosterProblem(Roster(), bids, badgoals=previous_goals)
+  previous_goals.append(hill_climbing(problem))
+  print("finished run", len(previous_goals), "of", attempts)
+
+ high_score = float('-inf')
+ best_roster = {}
+ problem = RosterProblem(Roster(), bids)
+ for roster in previous_goals:
+  this_score = problem.value(roster)
+  if this_score > high_score:
+   #print("new best")
+   best_roster = roster
+   high_score = this_score
+ return best_roster
