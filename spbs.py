@@ -1,6 +1,10 @@
+from __future__ import print_function
+
 from random import shuffle, choice
 from itertools import product, permutations
 from math import factorial
+
+from rostersearch import hill_climbing_roster_search
 
 names = [
 ]
@@ -21,7 +25,7 @@ def importcsvbids(csvfilename, bids):
 
    # Add this person's bids.
    bids[name] = row
-   print name, 'bids for', bids[name]
+   print(name, 'bids for', bids[name])
 
   return fieldnames
 
@@ -29,7 +33,6 @@ def score(roster):
  score_total = 0
  for shift in roster.keys():
   score = int(bids[roster[shift]][shift]) - 1
-  # print "Score", score, "for Shift", shift, '-', roster[shift]
   score_total = score_total - score
  return score_total
 
@@ -38,7 +41,7 @@ def assign (name, shift, bid_index):
  #bids[name][shift] = 10000 + bid_index + 1
  names.remove(name)
  shifts.remove(shift)
- print "Assigned", name, 'to shift', shift, "in round", bid_index + 1
+ #print "Assigned", name, 'to shift', shift, "in round", bid_index + 1
 
 def exhaustive_search(bids, shifts):
  best_score = -100
@@ -48,21 +51,21 @@ def exhaustive_search(bids, shifts):
   raise Exception('not square bids.')
 
  search_len = factorial(roster_length) * factorial(roster_length)
- print "Search through", search_len, "possibilities."
+ print("Search through", search_len, "possibilities.")
 
  iii = 0
  for roster in product(permutations(shifts, roster_length), permutations(bids.keys(), roster_length)):
   iii = iii + 1
   percent = 100 * float(iii) / float(search_len)
   if not percent % 1:
-   print percent, "%  generated", iii, "of", search_len
+   print(percent, "%  generated", iii, "of", search_len)
 
   roster = zip(roster[0],roster[1])
   roster = dict(roster)
   this_score = score(roster)
   if this_score > best_score:
    best_score = this_score
-   print "found", this_score, roster
+   print("found", this_score, roster)
    best_roster = roster
 
  return best_roster
@@ -97,14 +100,13 @@ if __name__ == "__main__":
 
  fieldnames = importcsvbids(args.bidcsv, bids)
 
- print 'These applicants will bid for shifts:', ', '.join(bids.keys())
+ print('These applicants will bid for shifts:', ', '.join(bids.keys()))
 
- shifts = bids[bids.keys()[0]] # risky
+ shifts = bids[list(bids.keys())[0]] # risky
 
- best_roster = exhaustive_search(bids, shifts)
+ best_roster = hill_climbing_roster_search(bids, shifts)
 
- print "BEST ROSTER"
- print best_roster
- print "SCORE", score(best_roster)
+ print(best_roster)
+ print("SCORE", score(best_roster))
 
  exportcsvbids(bids=bids, fieldnames=fieldnames)
