@@ -52,9 +52,10 @@ if __name__ == "__main__":
 
     print('These applicants will bid for shifts:', ', '.join(bids.keys()))
 
-    best_roster = mountain_range_search(bids)
+    best_rosters = mountain_range_search(bids)
+    best_roster = best_rosters[0]
 
     print('\n')
     print("BEST", best_roster)
     print('')
-    print("SCORE", score(best_roster))
+    print("SCORE", score(best_roster), "in", len(best_rosters), "rosters")

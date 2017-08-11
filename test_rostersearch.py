@@ -100,6 +100,27 @@ def test_roster_score(simple_bids, simple_initial, simple_goal):
     # Two second choices is better than a first and third!
     #TODO#assert r22.score(simple_bids) > r13.score(simple_bids)
 
+def test_roster_comparison():
+    """Confirm that two "identical" Rosters compare as such."""
+
+    r1 = Roster()
+    r1['shift1'] = 'name1'
+    r1['shift2'] = 'name2'
+    r1['shift3'] = 'name3'
+
+    r2 = Roster() # reverse order
+    r2['shift3'] = 'name3'
+    r2['shift2'] = 'name2'
+    r2['shift1'] = 'name1'
+
+    assert r1 == r2
+
+    # Random shuffle just to be sure!
+    r3 = Roster(random.sample(r1.items(), len(r1)))
+    r4 = Roster(random.sample(r2.items(), len(r2)))
+
+    assert r3 == r4
+
 def test_bids():
     bids = Bids({ #shuffled
         'name2': {

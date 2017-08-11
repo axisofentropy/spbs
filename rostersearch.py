@@ -16,6 +16,13 @@ from random import sample
 class Roster(OrderedDict):
     """Map of shifts to names"""
 
+    def __eq__(self, other):
+        """Compare two instances for equality.  Drop order for this."""
+        # When comparing, we don't really need the order,
+        # so recast to simple map object.
+
+        return dict(self) == dict(other)
+
     def shifts(self):
         """Return iterable of all shifts in this Roster."""
         return self.keys()
@@ -118,7 +125,7 @@ def hill_climbing_roster_search(bids):
     return hill_climbing(problem)
 
 def mountain_range_search(bids):
-    """Run simple Hill Climbing search many times, returning the best result"""
+    """Run simple Hill Climbing search many times, returning the best results"""
 
     # List of previously discovered goal states.
     previous_goals = []
@@ -140,4 +147,4 @@ def mountain_range_search(bids):
             high_score = this_score
         if this_score == high_score:
             best_rosters.append(roster)
-    return best_rosters[0]
+    return best_rosters
