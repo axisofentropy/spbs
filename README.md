@@ -11,7 +11,7 @@ When Catherine and I first discussed this, I recognized this as an economic prob
 
 We identified a specific metric for a roster's desirability.  The best possible roster assigns every employee to the schedule they desire most.  Conversely, the worst roster assigns everyone their least favorite.  We can measure this spectrum by scoring how "close" every employee got to their most preferred shift.  I began with a very simple quantification:  subtracting `1` for each employee choice denied.  An ideal roster, assigning all employees to their first-choice shift, has a score of `0`.  If one employee gets their second-choice shift, that subtracts `1`.  If three employees got their fourth choices, the total roster score would be `-9`.
 
-The first, most straightforward process first asked each employee to rank every available schedule in order of preference.  Then, an administrator could first consider all shifts receiving first-choice bids.  If any received only one first-choice, award that shift to the most desiring employee, removing him or her from future consideration.  If more than one first-choice is received for a shift, then randomly allocate the winner.  After considering all first-choices, move on to the second-choices and repeat.  We implemented this first with pencil and paper, and then I implemented a proof-of-concept visible in commit d1431c52e81fd3dd5e0baa69255eab24a6188a67.
+The first, most straightforward process first asked each employee to rank every available schedule in order of preference.  Then, an administrator could first consider all shifts receiving first-choice bids.  If any received only one first-choice, award that shift to the most desiring employee, removing him or her from future consideration.  If more than one first-choice is received for a shift, then randomly allocate the winner.  After considering all first-choices, move on to the second-choices and repeat.  We implemented this first with pencil and paper, and then I implemented a proof-of-concept visible in this repository's initial commit.
 
 Stakeholders considered this process an improvement over free-form discussion.  Employees understood and accepted the algorithm as fair, impartial, and often produced "good" schedules.  Yet I believed a more sophisticated algorithm would more often deliver the best-possible roster.
 
@@ -29,6 +29,10 @@ https://docs.google.com/spreadsheets/d/1WKzURDT-1bu0_G5PuhxL-fe-Ud3BvWr2yJQd-mYA
 Download that spreadsheet as "Comma-seperated values (.csv)".  Store it somewhere accessible to the executable.
 
 `python spbs.py "./downloaded.csv"`
+
+You may also use an anonymized example in this repository:
+
+`python spbs.py "./example.csv"`
 
 ## Roadmap
 Of course, tighter integration with Google Sheets would make this process much easier.  Deploying an executable to Windows and Mac desktops or somewhere online would also help a lot.
