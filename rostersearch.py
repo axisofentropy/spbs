@@ -6,8 +6,9 @@ except ImportError:
     raise Exception("This needs Python 3.3 or newer.")
 
 from itertools import product
+from collections import OrderedDict
 
-class Roster(dict):
+class Roster(OrderedDict):
     """Map of shifts to names"""
 
     def shifts(self):
