@@ -30,7 +30,6 @@ class Roster(OrderedDict):
         score_total = 0
         for shift in self.shifts():
             score = int(bids[self[shift]][shift]) - 1
-            # print "Score", score, "for Shift", shift, '-', roster[shift]
             score_total = score_total - score
         return score_total
 
@@ -60,7 +59,7 @@ def random_roster(bids):
 class RosterProblem(Problem):
     """Definition of our Problem"""
 
-    def __init__(self, initial, bids, badgoals, goal=None):
+    def __init__(self, initial, bids, goal=None):
         """The constructor specifies the initial state, and possibly a goal
         state, if there is a unique goal.  Your subclass's constructor can add
         other arguments."""
@@ -68,7 +67,6 @@ class RosterProblem(Problem):
         self.initial = initial
         self.goal = goal
         self.bids = bids
-        self.badgoals = badgoals
 
         self.names = bids.list_names()
         self.shifts = bids.list_shifts()
@@ -116,7 +114,7 @@ class RosterProblem(Problem):
 
 def hill_climbing_roster_search(bids):
     """Straightforward search through space of potential rosters"""
-    problem = RosterProblem(Roster(), bids, badgoals=[])
+    problem = RosterProblem(Roster(), bids)
     return hill_climbing(problem)
 
 def mountain_range_search(bids):
@@ -126,8 +124,7 @@ def mountain_range_search(bids):
     while len(previous_goals) < ATTEMPTS:
         problem = RosterProblem(
             random_roster(bids),
-            bids,
-            badgoals=previous_goals
+            bids
         )
         previous_goals.append(hill_climbing(problem))
         print(previous_goals[-1].score(bids), end=' ')
@@ -136,7 +133,7 @@ def mountain_range_search(bids):
 
     high_score = float('-inf')
     best_roster = {}
-    problem = RosterProblem(Roster(), bids, badgoals=None)
+    problem = RosterProblem(Roster(), bids)
     for roster in previous_goals:
         this_score = problem.value(roster)
         if this_score > high_score:

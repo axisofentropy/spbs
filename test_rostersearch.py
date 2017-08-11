@@ -42,7 +42,7 @@ def simple_bids():
 
 @pytest.fixture
 def simple_roster_problem(simple_initial, simple_bids, simple_goal):
-    return RosterProblem(simple_initial, simple_bids, None, simple_goal)
+    return RosterProblem(simple_initial, simple_bids, simple_goal)
 
 def test_roster(simple_bids):
     r = Roster({
@@ -132,7 +132,7 @@ def test_random_roster(simple_bids):
 class TestRosterProblem(object):
     def test_init(self, simple_initial, simple_goal, simple_bids):
 
-        rp = RosterProblem(simple_initial, simple_bids, None, simple_goal)
+        rp = RosterProblem(simple_initial, simple_bids, simple_goal)
 
         assert rp.initial == simple_initial
         assert rp.goal == simple_goal
