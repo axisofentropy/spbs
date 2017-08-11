@@ -36,7 +36,7 @@ def score(roster):
   score_total = score_total - score
  return score_total
 
-def assign (name, shift, bid_index):
+def assign(name, shift, bid_index):
  roster[shift] = name
  #bids[name][shift] = 10000 + bid_index + 1
  names.remove(name)
@@ -54,13 +54,15 @@ def exhaustive_search(bids, shifts):
  print("Search through", search_len, "possibilities.")
 
  iii = 0
- for roster in product(permutations(shifts, roster_length), permutations(bids.keys(), roster_length)):
+ for roster in product(
+  permutations(shifts, roster_length), permutations(bids.keys(), roster_length)
+ ):
   iii = iii + 1
   percent = 100 * float(iii) / float(search_len)
   if not percent % 1:
    print(percent, "%  generated", iii, "of", search_len)
 
-  roster = zip(roster[0],roster[1])
+  roster = zip(roster[0], roster[1])
   roster = dict(roster)
   this_score = score(roster)
   if this_score > best_score:

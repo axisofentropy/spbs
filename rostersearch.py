@@ -1,5 +1,5 @@
 from aima.search import Problem, hill_climbing
-from itertools import product, permutations
+from itertools import product
 
 class Roster(dict):
  def shifts(self):
@@ -9,7 +9,7 @@ class Roster(dict):
   return self.values()
 
 class RosterProblem(Problem):
- def __init__(self, initial, bids, badgoals=[], goal=None):
+ def __init__(self, initial, bids, badgoals, goal=None):
   """The constructor specifies the initial state, and possibly a goal
   state, if there is a unique goal.  Your subclass's constructor can add
   other arguments."""
@@ -59,8 +59,8 @@ class RosterProblem(Problem):
   return score_total
 
 def hill_climbing_roster_search(bids, shifts):
- problem = RosterProblem(Roster(), bids)
- return hill_climbing(problem) 
+ problem = RosterProblem(Roster(), bids, badgoals=[])
+ return hill_climbing(problem)
 
 def mountain_range_search(bids, shifts):
  # List of previously discovered goal states.
@@ -73,7 +73,7 @@ def mountain_range_search(bids, shifts):
 
  high_score = float('-inf')
  best_roster = {}
- problem = RosterProblem(Roster(), bids)
+ problem = RosterProblem(Roster(), bids, badgoals=None)
  for roster in previous_goals:
   this_score = problem.value(roster)
   if this_score > high_score:
