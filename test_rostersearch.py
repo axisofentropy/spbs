@@ -178,7 +178,7 @@ class TestRosterProblem(object):
 
         rp = simple_roster_problem
 
-        # Case iterable as list for comparison.
+        # Cast iterable as list for comparison.
         assert list(rp.actions(rp.initial)) == expected_actions
 
     def test_result(self, simple_roster_problem):

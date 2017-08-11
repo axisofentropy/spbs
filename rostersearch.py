@@ -1,5 +1,9 @@
 """Roster and problem objects, and some search functions"""
 
+from __future__ import print_function
+
+ATTEMPTS = 1000 # How many times we should randomly restart before satisfaction
+
 try:
     from aima.search import Problem, hill_climbing
 except ImportError:
@@ -13,12 +17,16 @@ class Roster(OrderedDict):
     """Map of shifts to names"""
 
     def shifts(self):
+        """Return iterable of all shifts in this Roster."""
         return self.keys()
 
     def names(self):
+        """Return iterable of all names with shifts in this Roster."""
         return self.values()
 
     def score(self, bids):
+        """How well does this Roster satisfy preferences in these bids?"""
+
         score_total = 0
         for shift in self.shifts():
             score = int(bids[self[shift]][shift]) - 1
@@ -32,15 +40,15 @@ class Bids(OrderedDict):
 
     def list_names(self):
         """List all the names referenced in this set of bids."""
-        l = list(self.keys())
-        l.sort() # Needs to be deterministic for later randomizing.
-        return l
+        names = list(self.keys())
+        names.sort() # Needs to be deterministic for later randomizing.
+        return names
 
     def list_shifts(self):
         """List all unique shifts referenced in this set of bids."""
-        l = list(self[list(self.keys())[0]].keys()) #TODO
-        l.sort() # Needs to be deterministic for later randomizing.
-        return l
+        shifts = list(self[list(self.keys())[0]].keys()) #TODO
+        shifts.sort() # Needs to be deterministic for later randomizing.
+        return shifts
 
 def random_roster(bids):
     """Generate a random complete Roster from a set of bids."""
@@ -65,7 +73,7 @@ class RosterProblem(Problem):
         self.names = bids.list_names()
         self.shifts = bids.list_shifts()
 
-    def actions(self, state):
+    def actions(self, state): #pylint: disable=no-self-use
         """Return the actions that can be executed in the given
         state. The result would typically be a list, but if there are
         many actions, consider yielding them one at a time in an
@@ -114,13 +122,16 @@ def hill_climbing_roster_search(bids):
 def mountain_range_search(bids):
     """Run simple Hill Climbing search many times, returning the best result"""
     # List of previously discovered goal states.
-    ATTEMPTS = 1000
     previous_goals = []
     while len(previous_goals) < ATTEMPTS:
-        problem = RosterProblem(random_roster(bids), bids, badgoals=previous_goals)
+        problem = RosterProblem(
+            random_roster(bids),
+            bids,
+            badgoals=previous_goals
+        )
         previous_goals.append(hill_climbing(problem))
         print(previous_goals[-1].score(bids), end=' ')
-        if len(previous_goals) % 12  == 0:
+        if len(previous_goals) % 12 == 0:
             print("finished run", len(previous_goals), "of", ATTEMPTS)
 
     high_score = float('-inf')
