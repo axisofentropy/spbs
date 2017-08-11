@@ -40,11 +40,15 @@ def simple_bids():
     })
     return bids
 
-def test_roster():
+@pytest.fixture
+def simple_roster_problem(simple_initial, simple_bids, simple_goal):
+    return RosterProblem(simple_initial, simple_bids, None, simple_goal)
+
+def test_roster(simple_bids):
     r = Roster({
-        'shift1': 'name1',
-        'shift2': 'name2',
-        'shift3': 'name3',
+        'shift1': 'name2',
+        'shift2': 'name3',
+        'shift3': 'name1',
     })
 
     # The .shifts() method should return iterables
@@ -59,6 +63,14 @@ def test_roster():
     assert list(r.names()).count('name1') == 1
     assert list(r.names()).count('name2') == 1
     assert list(r.names()).count('name3') == 1
+
+    # Test scoring too why not.
+
+    assert r.score(simple_bids) == -6
+
+def test_roster_score(simple_bids, simple_initial, simple_goal):
+    assert simple_initial.score(simple_bids) == -6
+    assert simple_goal.score(simple_bids) == 0
 
 def test_bids():
     bids = Bids({ #shuffled

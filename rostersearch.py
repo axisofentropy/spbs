@@ -18,6 +18,15 @@ class Roster(OrderedDict):
     def names(self):
         return self.values()
 
+    def score(self, bids):
+        score_total = 0
+        for shift in self.shifts():
+            score = int(bids[self[shift]][shift]) - 1
+            # print "Score", score, "for Shift", shift, '-', roster[shift]
+            score_total = score_total - score
+        return score_total
+
+
 class Bids(OrderedDict):
     """Map of names to map of shifts to preference."""
 
