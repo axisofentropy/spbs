@@ -20,7 +20,7 @@ The next obvious step beyond pencil and paper is enumerating and scoring all pos
 # Implementation
 
 ## Dependencies
-Python 3.something
+Python 3.something, probably 3.3
 
 ## Usage
 Initially, this implementation works best with Google Sheets and Forms.  We suggest creating a Form asking employees to rank their preferences for all available schedules in order from 1 (first choice) to N (last choice) where N is the number of available schedules.  This should result in a spreadsheet like this:

@@ -1,6 +1,9 @@
 """Roster and problem objects, and some search functions"""
 
-from aima.search import Problem, hill_climbing
+try:
+    from aima.search import Problem, hill_climbing
+except ImportError:
+    raise Exception("This needs Python 3.3 or newer.")
 
 from itertools import product
 
