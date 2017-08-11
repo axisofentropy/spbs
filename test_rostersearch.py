@@ -76,29 +76,29 @@ def test_roster_score(simple_bids, simple_initial, simple_goal):
     # An ideal roster is better than the worst possible roster.
     assert simple_goal.score(simple_bids) > simple_initial.score(simple_bids)
 
-    r1 = Roster({
+    r22 = Roster({
         'shift1': 'name3', # second choice
         'shift2': 'name1', # second choice
     })
 
-    r2 = Roster({
+    r13 = Roster({
         'shift1': 'name1', # first choice
         'shift2': 'name3', # third choice
     })
 
-    r3 = Roster({
+    r12 = Roster({
         'shift3': 'name3', # first choice
         'shift2': 'name1', # second choice
     })
 
     # A first and second choice are better than two seconds.
-    assert r3.score(simple_bids) > r1.score(simple_bids)
+    assert r12.score(simple_bids) > r22.score(simple_bids)
 
     # And better than a first and third, of course.
-    assert r3.score(simple_bids) > r2.score(simple_bids)
+    assert r12.score(simple_bids) > r13.score(simple_bids)
 
     # Two second choices is better than a first and third!
-    #TODO#assert r1.score(simple_bids) > r2.score(simple_bids)
+    #TODO#assert r22.score(simple_bids) > r13.score(simple_bids)
 
 def test_bids():
     bids = Bids({ #shuffled
@@ -119,11 +119,13 @@ def test_bids():
         },
     })
 
+    # Test .list_names method.
     assert len(bids.list_names()) == 3
     assert bids.list_names().count('name1') == 1
     assert bids.list_names().count('name2') == 1
     assert bids.list_names().count('name3') == 1
 
+    # Test .list_shifts method.
     assert len(bids.list_shifts()) == 3
     assert bids.list_shifts().count('shift1') == 1
     assert bids.list_shifts().count('shift2') == 1
