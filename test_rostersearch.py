@@ -124,8 +124,13 @@ def test_random_roster(simple_bids):
     assert roster3['shift2'] == 'name3'
     assert roster3['shift3'] == 'name1'
 
+    # Can we score these too?  Why not!
+    assert roster1.score(simple_bids) == -3
+    assert roster2.score(simple_bids) == -3
+    assert roster3.score(simple_bids) == -6
+
 class TestRosterProblem(object):
-    def test_rosterproblem_init(self, simple_initial, simple_goal, simple_bids):
+    def test_init(self, simple_initial, simple_goal, simple_bids):
 
         rp = RosterProblem(simple_initial, simple_bids, None, simple_goal)
 
@@ -148,3 +153,18 @@ class TestRosterProblem(object):
         assert list(rp.names).count('name3') == 1
 
         assert rp.names == simple_bids.list_names()
+
+    def test_value(self, simple_roster_problem, simple_initial, simple_goal):
+        rp = simple_roster_problem
+
+        # Try on its own internal initial state first.
+        assert rp.value(rp.initial) == rp.initial.score(rp.bids)
+
+        assert rp.value(simple_initial) == simple_initial.score(rp.bids)
+        assert rp.value(simple_goal) == simple_goal.score(rp.bids)
+
+    def test_goal_test(self, simple_roster_problem, simple_initial, simple_goal):
+        rp = simple_roster_problem
+
+        assert rp.goal_test(simple_initial) == False
+        assert rp.goal_test(simple_goal) == True

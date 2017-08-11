@@ -93,22 +93,21 @@ class RosterProblem(Problem):
 
     def goal_test(self, state):
         """Determine if this state has reached our problem's goal."""
-        if state in self.badgoals:
+
+        # Because this is an optimization problem, we don't have a goal.
+        # But if we somehow find a "perfect" roster, we can stop.
+        if state.score(self.bids) == 0:
+            return True
+        else:
             return False
-        return len(state.names) == len(self.names)
 
     # path_cost(self, c, state1, action, state2) # method of parent class
 
     def value(self, state):
         """For optimization problems, each state has a value.  Hill-climbing
         and related algorithms try to maximize this value."""
-        score_total = 0 - (1000 * len(self.names))
-        for shift in state.keys():
-            score = int(self.bids[state[shift]][shift]) - 1
-            # print "Score", score, "for Shift", shift, '-', roster[shift]
-            score_total = score_total - score + 1000
-        #print("SCORE", score_total, state)
-        return score_total
+
+        return state.score(self.bids)
 
 def hill_climbing_roster_search(bids):
     """Straightforward search through space of potential rosters"""
