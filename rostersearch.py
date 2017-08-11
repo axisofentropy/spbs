@@ -1,7 +1,12 @@
+"""Roster and problem objects, and some search functions"""
+
 from aima.search import Problem, hill_climbing
+
 from itertools import product
 
 class Roster(dict):
+    """Map of shifts to names"""
+
     def shifts(self):
         return self.keys()
 
@@ -9,10 +14,13 @@ class Roster(dict):
         return self.values()
 
 class RosterProblem(Problem):
+    """Definition of our Problem"""
+
     def __init__(self, initial, bids, badgoals, goal=None):
         """The constructor specifies the initial state, and possibly a goal
         state, if there is a unique goal.  Your subclass's constructor can add
         other arguments."""
+
         self.initial = initial
         self.goal = goal
         self.bids = bids
@@ -25,15 +33,22 @@ class RosterProblem(Problem):
         state. The result would typically be a list, but if there are
         many actions, consider yielding them one at a time in an
         iterator, rather than building them all at once."""
-        available_names = list(filter(lambda x: x not in state.names(), self.names))
-        available_shifts = list(filter(lambda x: x not in state.shifts(), self.shifts))
-        #print(list(product(available_shifts, available_names)))
+
+        available_names = list(
+            filter(lambda x: x not in state.names(), self.names)
+        )
+
+        available_shifts = list(
+            filter(lambda x: x not in state.shifts(), self.shifts)
+        )
+
         return product(available_shifts, available_names)
 
-    def result(self, state, action):
+    def result(self, state, action): #pylint: disable=no-self-use
         """Return the state that results from executing the given
         action in the given state. The action must be one of
         self.actions(state)."""
+
         output = Roster()
         output.update(state)
         output[action[0]] = action[1]
@@ -41,11 +56,12 @@ class RosterProblem(Problem):
         return output
 
     def goal_test(self, state):
-        if state in badgoals:
+        """Determine if this state has reached our problem's goal."""
+        if state in self.badgoals:
             return False
         return len(state.names) == len(self.names)
 
-    # path_cost(self, c, state1, action, state2)
+    # path_cost(self, c, state1, action, state2) # method of parent class
 
     def value(self, state):
         """For optimization problems, each state has a value.  Hill-climbing
@@ -58,11 +74,13 @@ class RosterProblem(Problem):
         #print("SCORE", score_total, state)
         return score_total
 
-def hill_climbing_roster_search(bids, shifts):
+def hill_climbing_roster_search(bids):
+    """Straightforward search through space of potential rosters"""
     problem = RosterProblem(Roster(), bids, badgoals=[])
     return hill_climbing(problem)
 
-def mountain_range_search(bids, shifts):
+def mountain_range_search(bids):
+    """Run simple Hill Climbing search many times, returning the best result"""
     # List of previously discovered goal states.
     attempts = 10000
     previous_goals = []
