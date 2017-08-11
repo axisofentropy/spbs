@@ -1,4 +1,4 @@
-from search import Problem, hill_climbing
+from aima.search import Problem, hill_climbing
 from itertools import product, permutations
 
 class Roster(dict):
