@@ -168,3 +168,31 @@ class TestRosterProblem(object):
 
         assert rp.goal_test(simple_initial) == False
         assert rp.goal_test(simple_goal) == True
+
+    def test_actions(self, simple_roster_problem):
+        expected_actions = [
+            ('shift1', 'shift2'), # Swap first and second.
+            ('shift1', 'shift3'), # Swap first and third.
+            ('shift2', 'shift3'), # Swap second and third.
+        ]
+
+        rp = simple_roster_problem
+
+        # Case iterable as list for comparison.
+        assert list(rp.actions(rp.initial)) == expected_actions
+
+    def test_result(self, simple_roster_problem):
+        rp = simple_roster_problem
+
+        action = ('shift1', 'shift3') # Swap first and third shifts.
+
+        expected_roster = Roster({
+            'shift1': 'name1',
+            'shift2': 'name3',
+            'shift3': 'name2',
+        })
+
+        resultant_roster = rp.result(rp.initial, action)
+
+        for key in expected_roster.keys():
+            assert resultant_roster[key] == expected_roster[key]

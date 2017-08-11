@@ -5,7 +5,7 @@ try:
 except ImportError:
     raise Exception("This needs Python 3.3 or newer.")
 
-from itertools import product
+from itertools import combinations
 from collections import OrderedDict
 from random import sample
 
@@ -61,6 +61,7 @@ class RosterProblem(Problem):
         self.goal = goal
         self.bids = bids
         self.badgoals = badgoals
+
         self.names = bids.list_names()
         self.shifts = bids.list_shifts()
 
@@ -70,25 +71,21 @@ class RosterProblem(Problem):
         many actions, consider yielding them one at a time in an
         iterator, rather than building them all at once."""
 
-        available_names = list(
-            filter(lambda x: x not in state.names(), self.names)
-        )
-
-        available_shifts = list(
-            filter(lambda x: x not in state.shifts(), self.shifts)
-        )
-
-        return product(available_shifts, available_names)
+        # Return an iterable yielding all pairings of shifts to swap.
+        return combinations(state.shifts(), 2)
 
     def result(self, state, action): #pylint: disable=no-self-use
         """Return the state that results from executing the given
         action in the given state. The action must be one of
         self.actions(state)."""
 
+        # Create a new state object so we don't clobber the original.
         output = Roster()
         output.update(state)
-        output[action[0]] = action[1]
-        #print(output)
+
+        # Swap the values of the two keys in the `action` tuple.
+        output[action[0]] = state[action[1]]
+        output[action[1]] = state[action[0]]
         return output
 
     def goal_test(self, state):
@@ -117,10 +114,10 @@ def hill_climbing_roster_search(bids):
 def mountain_range_search(bids):
     """Run simple Hill Climbing search many times, returning the best result"""
     # List of previously discovered goal states.
-    attempts = 10000
+    attempts = 1000
     previous_goals = []
     while len(previous_goals) < attempts:
-        problem = RosterProblem(Roster(), bids, badgoals=previous_goals)
+        problem = RosterProblem(random_roster(bids), bids, badgoals=previous_goals)
         previous_goals.append(hill_climbing(problem))
         print("finished run", len(previous_goals), "of", attempts)
 
