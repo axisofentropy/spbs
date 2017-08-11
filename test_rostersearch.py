@@ -69,8 +69,36 @@ def test_roster(simple_bids):
     assert r.score(simple_bids) == -6
 
 def test_roster_score(simple_bids, simple_initial, simple_goal):
-    assert simple_initial.score(simple_bids) == -6
-    assert simple_goal.score(simple_bids) == 0
+    assert simple_goal.score(simple_bids) == 0 # Zero is ideal.
+
+    # Let's compare some Rosters and enforce which is better.
+
+    # An ideal roster is better than the worst possible roster.
+    assert simple_goal.score(simple_bids) > simple_initial.score(simple_bids)
+
+    r1 = Roster({
+        'shift1': 'name3', # second choice
+        'shift2': 'name1', # second choice
+    })
+
+    r2 = Roster({
+        'shift1': 'name1', # first choice
+        'shift2': 'name3', # third choice
+    })
+
+    r3 = Roster({
+        'shift3': 'name3', # first choice
+        'shift2': 'name1', # second choice
+    })
+
+    # A first and second choice are better than two seconds.
+    assert r3.score(simple_bids) > r1.score(simple_bids)
+
+    # And better than a first and third, of course.
+    assert r3.score(simple_bids) > r2.score(simple_bids)
+
+    # Two second choices is better than a first and third!
+    #TODO#assert r1.score(simple_bids) > r2.score(simple_bids)
 
 def test_bids():
     bids = Bids({ #shuffled
