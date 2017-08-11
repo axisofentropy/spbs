@@ -64,10 +64,6 @@ def test_roster(simple_bids):
     assert list(r.names()).count('name2') == 1
     assert list(r.names()).count('name3') == 1
 
-    # Test scoring too why not.
-
-    assert r.score(simple_bids) == -6
-
 def test_roster_score(simple_bids, simple_initial, simple_goal):
     assert simple_goal.score(simple_bids) == 0 # Zero is ideal.
 
@@ -98,7 +94,7 @@ def test_roster_score(simple_bids, simple_initial, simple_goal):
     assert r12.score(simple_bids) > r13.score(simple_bids)
 
     # Two second choices is better than a first and third!
-    #TODO#assert r22.score(simple_bids) > r13.score(simple_bids)
+    assert r22.score(simple_bids) > r13.score(simple_bids)
 
 def test_roster_comparison():
     """Confirm that two "identical" Rosters compare as such, ignoring order"""
@@ -174,11 +170,6 @@ def test_random_roster(simple_bids):
     assert roster3['shift1'] == 'name2'
     assert roster3['shift2'] == 'name3'
     assert roster3['shift3'] == 'name1'
-
-    # Can we score these too?  Why not!
-    assert roster1.score(simple_bids) == -3
-    assert roster2.score(simple_bids) == -3
-    assert roster3.score(simple_bids) == -6
 
 class TestRosterProblem(object):
     def test_init(self, simple_initial, simple_goal, simple_bids):

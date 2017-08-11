@@ -34,10 +34,21 @@ class Roster(OrderedDict):
     def score(self, bids):
         """How well does this Roster satisfy preferences in these bids?"""
 
+        # Begin with a perfect roster, one where everyone gets their wish,
+        # then subtract disappointment.
         score_total = 0
+
         for shift in self.shifts():
-            score = int(bids[self[shift]][shift]) - 1
-            score_total = score_total - score
+            # An individuals disappointment is a function of how many
+            # preferences were denied.
+            disappointment = int(bids[self[shift]][shift]) - 1
+
+            # The effect is also cumulative:
+            # The second denial hurts more than the first.
+            disappointment += disappointment**1.01 # exponential tiebreaker
+
+            # Subtract this individual's disappointment from the cohort.
+            score_total -= disappointment # subtract
         return score_total
 
     def __str__(self):
@@ -149,8 +160,8 @@ def mountain_range_search(bids):
     while len(previous_goals) < ATTEMPTS:
         previous_goals.append(hill_climbing_roster_search(bids))
 
-        print(previous_goals[-1].score(bids), end=' ')
-        if len(previous_goals) % 12 == 0:
+        print('{:.2f}'.format(previous_goals[-1].score(bids)), end=' ')
+        if len(previous_goals) % 8 == 0:
             print("finished run", len(previous_goals), "of", ATTEMPTS)
 
     high_score = float('-inf') # Lowest possible score!

@@ -42,16 +42,16 @@ if __name__ == "__main__":
 
     fieldnames = importcsvbids(args.bidcsv, bids)
 
-    print('These applicants will bid for shifts:', ', '.join(bids.keys()))
+    #print('These applicants will bid for shifts:', ', '.join(bids.keys()))
 
     best_rosters = mountain_range_search(bids)
-    # for roster in best_rosters:
-    #     print(str(roster))
 
     best_roster = best_rosters[0]
 
     print('\n')
     print("BEST")
-    print(str(best_roster))
+    for roster in best_rosters:
+        print(best_rosters.index(roster))
+        print(str(roster))
     print('')
     print("SCORE", best_roster.score(bids), "in", len(best_rosters), "rosters")
