@@ -101,7 +101,7 @@ def test_roster_score(simple_bids, simple_initial, simple_goal):
     #TODO#assert r22.score(simple_bids) > r13.score(simple_bids)
 
 def test_roster_comparison():
-    """Confirm that two "identical" Rosters compare as such."""
+    """Confirm that two "identical" Rosters compare as such, ignoring order"""
 
     r1 = Roster()
     r1['shift1'] = 'name1'

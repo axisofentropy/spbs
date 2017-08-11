@@ -40,6 +40,23 @@ class Roster(OrderedDict):
             score_total = score_total - score
         return score_total
 
+    def __str__(self):
+        """Pretty print this Roster."""
+
+        output_str = str('')
+
+        # We want this output to be tabular, so determine max string lengths.
+        max_name_len = max({len(name) for name in self.names()})
+        #max_shift_len = max({len(shift) for shift in self.shifts()})
+
+        for shift, name in sorted(list(self.items())):
+            output_str += '{:>{name_len}} - {}\n'.format(
+                name,
+                shift,
+                name_len=max_name_len,
+            )
+
+        return output_str
 
 class Bids(OrderedDict):
     """Map of names to map of shifts to preference."""
@@ -146,5 +163,6 @@ def mountain_range_search(bids):
             best_rosters = [roster,]
             high_score = this_score
         if this_score == high_score:
-            best_rosters.append(roster)
+            if roster not in best_rosters:
+                best_rosters.append(roster)
     return best_rosters

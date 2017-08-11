@@ -22,14 +22,6 @@ def importcsvbids(csvfilename, bids):
 
         return fieldnames
 
-def score(roster):
-    """Return relative value of a potential roster."""
-    score_total = 0
-    for shift in roster.keys():
-        score = int(bids[roster[shift]][shift]) - 1
-        score_total = score_total - score
-    return score_total
-
 # Main loop if called via command-line
 if __name__ == "__main__":
     from argparse import ArgumentParser
@@ -53,9 +45,13 @@ if __name__ == "__main__":
     print('These applicants will bid for shifts:', ', '.join(bids.keys()))
 
     best_rosters = mountain_range_search(bids)
+    # for roster in best_rosters:
+    #     print(str(roster))
+
     best_roster = best_rosters[0]
 
     print('\n')
-    print("BEST", best_roster)
+    print("BEST")
+    print(str(best_roster))
     print('')
-    print("SCORE", score(best_roster), "in", len(best_rosters), "rosters")
+    print("SCORE", best_roster.score(bids), "in", len(best_rosters), "rosters")

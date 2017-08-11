@@ -1,4 +1,4 @@
-Email Address,Shift 1 (off Sa/Su),Shift 2 (off W/Th),Shift 3 (off Tu/W/Th),Shift 4 (off Sa/Su),Shift 5 (off Sa/Su),Shift 6 (off Sa/Su),Shift 7 (off F/Sa),Shift 8(off Tu/W),Shift 9 (off F/Sa),Shift 10 (off Sa/Su),Shift 11 (off Tu/W/Th)
+Email Address,Shift 1  (off Sa/Su),Shift 2  (off W/Th),Shift 3  (off Tu/W/Th),Shift 4  (off Sa/Su),Shift 5  (off Sa/Su),Shift 6  (off Sa/Su),Shift 7  (off F/Sa),Shift 8  (off Tu/W),Shift 9  (off F/Sa),Shift 10 (off Sa/Su),Shift 11 (off Tu/W/Th)
 Alice@example.com,9,11,10,2,1,5,3,6,4,7,8
 Bob@example.com,4,5,2,1,6,10,7,11,8,9,3
 Charlie@example.com,11,10,9,1,2,3,4,5,6,7,8
