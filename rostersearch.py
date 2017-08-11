@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-ATTEMPTS = 1000 # How many times we should randomly restart before satisfaction
+ATTEMPTS = 200 # How many times we should randomly restart before satisfaction
 
 try:
     from aima.search import Problem, hill_climbing
@@ -114,30 +114,30 @@ class RosterProblem(Problem):
 
 def hill_climbing_roster_search(bids):
     """Straightforward search through space of potential rosters"""
-    problem = RosterProblem(Roster(), bids)
+    problem = RosterProblem(random_roster(bids), bids)
     return hill_climbing(problem)
 
 def mountain_range_search(bids):
     """Run simple Hill Climbing search many times, returning the best result"""
+
     # List of previously discovered goal states.
     previous_goals = []
     while len(previous_goals) < ATTEMPTS:
-        problem = RosterProblem(
-            random_roster(bids),
-            bids
-        )
-        previous_goals.append(hill_climbing(problem))
+        previous_goals.append(hill_climbing_roster_search(bids))
+
         print(previous_goals[-1].score(bids), end=' ')
         if len(previous_goals) % 12 == 0:
             print("finished run", len(previous_goals), "of", ATTEMPTS)
 
-    high_score = float('-inf')
-    best_roster = {}
-    problem = RosterProblem(Roster(), bids)
+    high_score = float('-inf') # Lowest possible score!
+
+    best_rosters = []
+
     for roster in previous_goals:
-        this_score = problem.value(roster)
+        this_score = roster.score(bids)
         if this_score > high_score:
-            #print("new best")
-            best_roster = roster
+            best_rosters = [roster,]
             high_score = this_score
-    return best_roster
+        if this_score == high_score:
+            best_rosters.append(roster)
+    return best_rosters[0]
