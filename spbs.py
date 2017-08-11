@@ -19,7 +19,6 @@ def importcsvbids(csvfilename, bids):
 
             # Add this person's bids.
             bids[name] = row
-            print(name, 'bids for', bids[name])
 
         return fieldnames
 
@@ -55,5 +54,7 @@ if __name__ == "__main__":
 
     best_roster = mountain_range_search(bids)
 
+    print('\n')
     print("BEST", best_roster)
+    print('')
     print("SCORE", score(best_roster))

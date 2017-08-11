@@ -114,12 +114,14 @@ def hill_climbing_roster_search(bids):
 def mountain_range_search(bids):
     """Run simple Hill Climbing search many times, returning the best result"""
     # List of previously discovered goal states.
-    attempts = 1000
+    ATTEMPTS = 1000
     previous_goals = []
-    while len(previous_goals) < attempts:
+    while len(previous_goals) < ATTEMPTS:
         problem = RosterProblem(random_roster(bids), bids, badgoals=previous_goals)
         previous_goals.append(hill_climbing(problem))
-        print("finished run", len(previous_goals), "of", attempts)
+        print(previous_goals[-1].score(bids), end=' ')
+        if len(previous_goals) % 12  == 0:
+            print("finished run", len(previous_goals), "of", ATTEMPTS)
 
     high_score = float('-inf')
     best_roster = {}
