@@ -2,17 +2,12 @@
 
 from __future__ import print_function
 
-from rostersearch import mountain_range_search
-
-names = [
-]
-
-shifts = [
-]
+from rostersearch import Bids, mountain_range_search
 
 def importcsvbids(csvfilename, bids):
     """Import preferencial bids from a CSV file."""
     from csv import DictReader
+
     with open(csvfilename) as csvfile:
         csvreader = DictReader(csvfile)
         fieldnames = list(csvreader.fieldnames) # copy
@@ -52,7 +47,7 @@ if __name__ == "__main__":
 
     args = argparser.parse_args()
 
-    bids = {}
+    bids = Bids()
 
     fieldnames = importcsvbids(args.bidcsv, bids)
 
