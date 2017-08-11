@@ -7,6 +7,7 @@ except ImportError:
 
 from itertools import product
 from collections import OrderedDict
+from random import sample
 
 class Roster(OrderedDict):
     """Map of shifts to names"""
@@ -16,6 +17,28 @@ class Roster(OrderedDict):
 
     def names(self):
         return self.values()
+
+class Bids(OrderedDict):
+    """Map of names to map of shifts to preference."""
+
+    def list_names(self):
+        """List all the names referenced in this set of bids."""
+        l = list(self.keys())
+        l.sort() # Needs to be deterministic for later randomizing.
+        return l
+
+    def list_shifts(self):
+        """List all unique shifts referenced in this set of bids."""
+        l = list(self[list(self.keys())[0]].keys()) #TODO
+        l.sort() # Needs to be deterministic for later randomizing.
+        return l
+
+def random_roster(bids):
+    """Generate a random complete Roster from a set of bids."""
+    return Roster(zip(
+        bids.list_shifts(),
+        sample(bids.list_names(), k=len(bids.list_names()))
+    ))
 
 class RosterProblem(Problem):
     """Definition of our Problem"""
@@ -29,8 +52,8 @@ class RosterProblem(Problem):
         self.goal = goal
         self.bids = bids
         self.badgoals = badgoals
-        self.names = bids.keys()
-        self.shifts = bids[list(bids.keys())[0]] #risky
+        self.names = bids.list_names()
+        self.shifts = bids.list_shifts()
 
     def actions(self, state):
         """Return the actions that can be executed in the given
